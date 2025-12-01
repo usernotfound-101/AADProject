@@ -12,27 +12,20 @@ def parse_graph(filepath):
     adj = defaultdict(set)
     in_edge_section = False
     dim_regex = re.compile(r"DIMENSION\s*:\s*(\d+)")
-
     with open(filepath, 'r') as f:
         for line in f:
             line = line.strip()
-
             if not dimension:
                 match = dim_regex.match(line)
                 if match:
                     dimension = int(match.group(1))
-                    # Initialize adjacency list for all nodes
                     adj = {i: set() for i in range(1, dimension + 1)}
-
             if line == "EDGE_DATA_SECTION":
                 in_edge_section = True
                 continue
-            
-            # Stop parsing if we hit another section or EOF
             if line == "EOF" or "TOUR_SECTION" in line:
                 in_edge_section = False
                 break
-
             if in_edge_section:
                 try:
                     u, v = map(int, line.split())
@@ -41,16 +34,11 @@ def parse_graph(filepath):
                 except ValueError:
                     # Handle empty lines or malformed data
                     continue
-                    
     if dimension == 0:
         raise ValueError("Could not find 'DIMENSION' in graph file.")
-        
     return adj, dimension
 
 def solve_hamiltonian_path(adj, n):
-    """
-    Attempts to find a Hamiltonian Path by trying every node as a start node.
-    """
     for start_node in range(1, n + 1):
         path = [start_node]
         visited = {start_node}
@@ -62,9 +50,6 @@ def solve_hamiltonian_path(adj, n):
     return None  # No path found from any starting node
 
 def backtrack(u, path, visited, adj, n):
-    """
-    The recursive backtracking helper function.
-    """
     # 1. Goal: If path length is n, we've visited every node.
     if len(path) == n:
         return True
@@ -90,9 +75,6 @@ def backtrack(u, path, visited, adj, n):
     return False
 
 def main():
-    """
-    Main function to parse, solve, and time the algorithm.
-    """
     # Use the hardcoded path from your prompt
     filepath = "../../../Datasets_Material/FHCPCS/graph1.hcp"
     
@@ -108,13 +90,6 @@ def main():
 
     print(f"--- Brute-Force Hamiltonian Path Solver ---")
     print(f"Loaded graph '{filepath}' with {n} vertices.")
-    print("\nAttempting to find path using brute-force backtracking...")
-    print("="*40)
-    print("WARNING: This algorithm has a time complexity of O(n!)")
-    print(f"For n={n}, this will likely run for an")
-    print("IMPOSSIBLY long time. Its purpose is for")
-    print("demonstrating infeasibility for your project.")
-    print("="*40)
 
     try:
         start_time = time.perf_counter()
@@ -124,14 +99,14 @@ def main():
         duration = end_time - start_time
 
         if path:
-            print(f"\n✅ Found Hamiltonian Path in {duration:.6f} seconds:")
+            print(f"\nFound Hamiltonian Path in {duration:.6f} seconds:")
             # Truncate output if path is too long
             if len(path) > 20:
                 print(" -> ".join(map(str, path[:10])) + " ... " + " -> ".join(map(str, path[-10:])))
             else:
                 print(" -> ".join(map(str, path)))
         else:
-            print(f"\n❌ No Hamiltonian Path found.")
+            print(f"\n No Hamiltonian Path found.")
             print(f"   (Search completed in {duration:.6f} seconds)")
 
     except KeyboardInterrupt:

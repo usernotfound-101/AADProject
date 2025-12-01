@@ -132,7 +132,6 @@ def main():
         print(f"Error parsing file: {e}")
         sys.exit(1)
 
-    print(f"--- Greedy Heuristic Path Solver (Fewest Neighbors First) ---")
     print(f"Loaded graph '{filepath}' with {n} vertices.")
     
     if optimal_tour:
@@ -147,7 +146,7 @@ def main():
     duration = end_time - start_time
 
     print(f"\n--- Results ---")
-    print(f"✅ Search complete in {duration:.6f} seconds.")
+    print(f"   Search complete in {duration:.6f} seconds.")
     print(f"   Heuristic Path Length: {len(path)}")
     print(f"   Graph Dimension (n):   {n}")
     

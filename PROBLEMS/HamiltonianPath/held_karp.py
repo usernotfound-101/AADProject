@@ -110,10 +110,6 @@ def solve_held_karp(adj, n):
     
     for last_node in range(n):
         if dp[all_nodes_mask][last_node]:
-            # Found a path! Now we have to reconstruct it.
-            # (This is a simplified "path exists" check)
-            # Reconstructing the full path is complex, so we just
-            # return success.
             return f"Path found (ended at node {last_node + 1})", duration
 
     return None, duration
