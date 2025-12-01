@@ -1,25 +1,3 @@
-"""A simple Conflict-Driven Clause Learning (CDCL) SAT solver.
-
-This implementation aims to be educational and reasonably concise. It supports:
- - DIMACS CNF input parsing via `parse_dimacs` from the brute-force module
- - Clause learning via a First-UIP style analysis
- - Non-chronological backtracking (backjumping)
- - Unit propagation and decision branching
-
-Limitations:
- - Uses scanning-based unit propagation rather than watched literals for
-   simplicity. This is fine for small examples but not optimized for large
-   instances.
- - Clause minimization and advanced heuristics (VSIDS, restarts) are omitted
-   to keep the code readable.
-
-Functions:
- - solve_cdcl: the main CDCL solver that returns a satisfying assignment or None
-
-Example usage (from project root):
-    python APIs/3-SAT/cdcl.py APIs/3-SAT/sample.cnf
-"""
-
 from __future__ import annotations
 
 from collections import deque
@@ -60,9 +38,6 @@ def _is_clause_satisfied(clause: Clause, assign: Dict[int, AssignmentEntry]) -> 
 
 
 def _count_unassigned_and_last(clause: Clause, assign: Dict[int, AssignmentEntry]) -> Tuple[int, Optional[int], Optional[int]]:
-    """Return (count_unassigned, last_unassigned_lit, last_satisfied_var_level)
-    last_satisfied_var_level is returned for the last assigned var encountered in clause
-    (used for conflict reasons)"""
     unassigned = 0
     last_lit = None
     last_level = None
@@ -82,7 +57,6 @@ def _count_unassigned_and_last(clause: Clause, assign: Dict[int, AssignmentEntry
 
 
 def unit_propagate(formula: Formula, assign: Dict[int, AssignmentEntry], trail: List[int], decision_level: int) -> Optional[Clause]:
-    """Perform unit propagation until fixpoint. Returns conflicting clause if any, otherwise None."""
     changed = True
     while changed:
         changed = False
@@ -124,12 +98,6 @@ def _literal_level(assign: Dict[int, AssignmentEntry], lit: int) -> Optional[int
 
 
 def conflict_analysis(conflict_clause: Clause, assign: Dict[int, AssignmentEntry], decision_level: int, trail: List[int]) -> Tuple[Clause, int]:
-    """Return learned clause and backjump level (first UIP resolution).
-
-    This follows a straightforward resolution process: we keep resolving the
-    current conflict clause with the reasons for a chosen literal at the current
-    highest decision level until only one literal remains from the current level.
-    """
     learned = set(conflict_clause)
     while True:
         # count literals from current decision level

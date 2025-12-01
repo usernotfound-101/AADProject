@@ -9,12 +9,6 @@ Formula = List[Clause]
 
 
 def parse_dimacs(path: str) -> Tuple[int, Formula]:
-	"""Parse a DIMACS CNF file.
-
-	Returns a tuple (num_vars, clauses) where clauses are lists of integers.
-	Each integer is a variable ID (1..n) with sign indicating negation.
-	Only reads non-empty clauses; ignores comment lines that start with 'c'.
-	"""
 	clauses: Formula = []
 	num_vars = 0
 	with open(path, "r", encoding="utf-8") as f:
@@ -58,9 +52,6 @@ def evaluate_clause(clause: Clause, assignment: Dict[int, bool]) -> bool:
 
 
 def solve_bruteforce(num_vars: int, clauses: Formula) -> Optional[Dict[int, bool]]:
-	"""Try all assignments of variables 1..num_vars and return a satisfying
-	assignment if one exists; otherwise return None.
-	"""
 	if num_vars < 0:
 		num_vars = 0
 	if not clauses:
@@ -85,13 +76,6 @@ def pretty_assignment(assignment: Dict[int, bool]) -> str:
 
 
 def _parse_formula_string(formula_str: str) -> Tuple[int, Formula]:
-	"""Parse a simple textual formula using variables x1..xn with operators
-	'or', 'and', 'not', parentheses, and separated by spaces. This parser
-	is simple and only intended for quick examples. It returns the number of
-	variables and a list of clauses (assuming 3-SAT format with at most 3
-	literals per clause).
-	Example: "(x1 or not x2 or x3) and (not x1 or x2 or x4)"
-	"""
 	formula_str = formula_str.replace("(", " (").replace(")", " ) ")
 	# split clauses by "and"
 	groups = [g.strip() for g in formula_str.split("and") if g.strip()]
