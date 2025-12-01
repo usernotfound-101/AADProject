@@ -86,6 +86,7 @@ def plot_results(title, sizes, times, err, include_brute):
     sizes, avg_times = average_by_length(sizes, times)
     _, avg_err = average_by_length(sizes, err)
 
+    # Runtime graph
     plt.figure(figsize=(8, 5))
     if include_brute:
         plt.plot(sizes, avg_times["brute"], marker="o", label="Brute Force")
@@ -102,14 +103,18 @@ def plot_results(title, sizes, times, err, include_brute):
     plt.savefig(f"results/{title}_runtime.png", dpi=300)
     plt.close()
 
+    # Error Bar Chart
     plt.figure(figsize=(10, 5))
-    plt.plot(sizes, avg_err["greedy"], marker="o", label="Greedy Error")
-    plt.plot(sizes, avg_err["fptas"], marker="o", label="FPTAS Error")
+    x = range(len(sizes))
+    width = 0.35
+    plt.bar([i - width/2 for i in x], avg_err["greedy"], width=width, label="Greedy Error")
+    plt.bar([i + width/2 for i in x], avg_err["fptas"], width=width, label="FPTAS Error")
+    plt.xticks(x, sizes)
     plt.xlabel("Instance size (n)")
     plt.ylabel("Error (1 - accuracy)")
     plt.ylim(0, 0.15)
-    plt.title(f"{title} — Error Comparison")
-    plt.grid(True, linestyle="--", alpha=0.6)
+    plt.title(f"{title} — Error Comparison (Bar Chart)")
+    plt.grid(axis="y", linestyle="--", alpha=0.6)
     plt.legend()
     plt.tight_layout()
     plt.savefig(f"results/{title}_error.png", dpi=300)
