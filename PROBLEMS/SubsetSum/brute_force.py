@@ -14,12 +14,3 @@ def subset_sum_bruteforce(arr, target, i=0, current_sum=0):
         return True
 
     return False
-
-def get_input():
-    arr = [3, 34, 4, 12, 5, 2]
-    target = 9
-    return arr, target
-
-
-arr, target = get_input()
-print(subset_sum_bruteforce(arr, target))
